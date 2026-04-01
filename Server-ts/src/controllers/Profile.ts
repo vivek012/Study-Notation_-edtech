@@ -1,66 +1,12 @@
-import { validateHeaderName } from "node:http";
+import mongoose from "mongoose";
 import Profile from "../models/Profile";
 import User from "../models/User";
 import { Request, Response } from "express"
 import { UploadedFile } from "express-fileupload";
 import uploadFilesToCloudinary from "../utils/Cloudinary";
 import convertSecondsToDuration from "../utils/secToDuration";
-
-
-
-
-// Profile Update 
-
-// export const updateProfile = async (req: Request, res: Response) => {
-
-//     try {
-//         // get data 
-//         const { dateOfBirth = "", about = "", contactNumber, gender } = req.body
-
-//         //  get userId 
-//         const id = req.user.id;
-
-//         //  Validate 
-//         if (!contactNumber || !gender || !id) {
-//             return res.status(200).json({
-//                 success: false,
-//                 message: "All fields are Required",
-//             })
-
-//         }
-
-//         //  find profile
-//         const userDetails = await User.findById(id)
-//         const profileId = userDetails?.additionalDetails;
-//         const profileDetails = await Profile.findById(profileId)
-
-//         // update profile
-//         if (profileDetails) {
-//             profileDetails.dateOfBirth = dateOfBirth;
-//             profileDetails.about = about;
-//             profileDetails.contactNumber = contactNumber;
-//             profileDetails.gender = gender;
-//             await profileDetails.save();
-//         }
-
-
-
-//         //  return response
-//         return res.status(200).json({
-//             success: true,
-//             message: "Profile Update Successfully",
-//             profileDetails
-
-//         })
-//     } catch (error: any) {
-//         return res.status(500).json({
-//             success: false,
-//             message: "Unbale to Update Profile , Please try again later",
-//             error: error.message,
-//         });
-//     }
-
-// }
+import Course from "../models/Course";
+import CourseProgress from "../models/CourseProgress";
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {
@@ -192,153 +138,120 @@ export const getAllUsers = async (req: Request, res: Response) => {
 }
 
 
-// interface AuthRequest extends Request {
-//   user?: {
-//     id: string;
-//   };
-//   files?: any;
-// }
 
-// export const updateDisplayPicture = async (
-//   req: AuthRequest,
-//   res: Response
-// ) => {
-//   try {
-//     // ✅ Check file exists
-//     if (!req.files || !req.files.displayPicture) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "Display picture is required",
-//       });
-//     }
+export const updateDisplayPicture = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id
+    const displayPicture = req.files?.displayPicture
 
-//     const displayPicture = req.files.displayPicture;
-//     const userId = req.user?.id;
+    if (!displayPicture) {
+      return res.status(400).json({ success: false, message: "Display picture is required" })
+    }
 
-//     if (!userId) {
-//       return res.status(401).json({
-//         success: false,
-//         message: "Unauthorized",
-//       });
-//     }
+    const image = await uploadFilesToCloudinary(
+      Array.isArray(displayPicture) ? displayPicture[0] : displayPicture,
+      process.env.FOLDER_NAME ?? "studyHub",
+      1000,
+      1000
+    )
 
-//     // ✅ Upload to cloudinary
-//     const image = await uploadFilesToCloudinary(
-//       displayPicture,
-//       process.env.FOLDER_NAME as string,
-//       1000,
-//       1000
-//     );
+    const updatedProfile = await User.findByIdAndUpdate(
+      userId,
+      { image: image.secure_url },
+      { new: true }
+    )
 
-//     // ✅ Update user
-//     const updatedProfile = await User.findByIdAndUpdate(
-//       userId,
-//       { image: image.secure_url },
-//       { new: true }
-//     );
+    return res.status(200).json({
+      success: true,
+      message: "Image updated successfully",
+      data: updatedProfile,
+    })
+  } catch (error: any) {
+    return res.status(500).json({ success: false, message: error.message })
+  }
+}
 
-//     if (!updatedProfile) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User not found",
-//       });
-//     }
+export const getEnrolledCourses = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user.id
 
-//     return res.status(200).json({
-//       success: true,
-//       message: "Image updated successfully",
-//       data: updatedProfile,
-//     });
-//   } catch (error: any) {
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
+    const userDetails = await User.findById(userId)
+      .populate({
+        path: "courses",
+        populate: {
+          path: "courseContent",
+          populate: { path: "subSection" },
+        },
+      })
+      .exec()
 
+    if (!userDetails) {
+      return res.status(404).json({ success: false, message: `User not found: ${userId}` })
+    }
 
+    const user = userDetails.toObject() as any
 
+    if (!user.coursesEnrolled?.length) {
+      return res.status(200).json({ success: true, data: [] })
+    }
 
+    const enrichedCourses = await Promise.all(
+      user.coursesEnrolled.map(async (course: any) => {
+        const totalDurationInSeconds = course.courseContent.reduce(
+          (total: number, section: any) =>
+            total +
+            section.subSection.reduce(
+              (acc: number, sub: any) => acc + parseInt(sub.timeDuration),
+              0
+            ),
+          0
+        )
 
-// export const getEnrolledCourses = async (
-//   req: AuthRequest,
-//   res: Response
-// ) => {
-//   try {
-//     const userId = req.user?.id;
+        const subsectionCount = course.courseContent.reduce(
+          (acc: number, section: any) => acc + section.subSection.length,
+          0
+        )
 
-//     if (!userId) {
-//       return res.status(401).json({
-//         success: false,
-//         message: "Unauthorized",
-//       });
-//     }
+        const courseProgress = await CourseProgress.findOne({
+          courseID: course._id,
+          userId,
+        })
 
-//     const userDetails = await User.findById(userId)
-//       .populate({
-//         path: "coursesEnrolled",
-//         model: "Course",
-//         populate: {
-//           path: "courseContent",
-//           model: "Section",
-//           populate: {
-//             path: "subSection",
-//             model: "SubSection",
-//           },
-//         },
-//       })
-//       .lean();
+        const completedCount = courseProgress?.completedVideos.length ?? 0
+        const progressPercentage =
+          subsectionCount === 0
+            ? 100
+            : Math.round((completedCount / subsectionCount) * 10000) / 100
 
-//     if (!userDetails) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User not found",
-//       });
-//     }
+        return {
+          ...course,
+          totalDuration: convertSecondsToDuration(totalDurationInSeconds),
+          progressPercentage,
+        }
+      })
+    )
 
-//     for (let course of userDetails.coursesEnrolled) {
-//       let totalDurationInSeconds = 0;
-//       let totalSubsections = 0;
+    return res.status(200).json({ success: true, data: enrichedCourses })
+  } catch (error: any) {
+    return res.status(500).json({ success: false, message: error.message })
+  }
+}
 
-//       for (let section of course.courseContent) {
-//         const sectionDuration = section.subSection.reduce(
-//           (acc: number, curr: any) =>
-//             acc + parseInt(curr.timeDuration || "0"),
-//           0
-//         );
+export const instructorDashboard = async (req: Request, res: Response) => {
+  try {
+    const courses = await Course.find({ instructor: req.user.id })
 
-//         totalDurationInSeconds += sectionDuration;
-//         totalSubsections += section.subSection.length;
-//       }
+    const courseData = courses.map((course) => ({
+      _id: course._id,
+      courseName: course.courseName,
+      courseDescription: course.courseDescription,
+      totalStudentsEnrolled: course.studentsEnrolled.length,
+      totalAmountGenerated: course.studentsEnrolled.length * (course.price ?? 0),
+    }))
 
-//       course.totalDuration = convertSecondsToDuration(totalDurationInSeconds);
-
-//       const progress = await CourseProgress.findOne({
-//         courseID: course._id,
-//         userId: userId,
-//       });
-
-//       const completedCount =
-//         progress?.completedVideos?.length || 0;
-
-//       if (totalSubsections === 0) {
-//         course.progressPercentage = 100;
-//       } else {
-//         course.progressPercentage = Number(
-//           ((completedCount / totalSubsections) * 100).toFixed(2)
-//         );
-//       }
-//     }
-
-//     return res.status(200).json({
-//       success: true,
-//       data: userDetails.coursesEnrolled,
-//     });
-//   } catch (error: any) {
-//     return res.status(500).json({
-//       success: false,
-//       message: error.message,
-//     });
-//   }
-// };
+    return res.status(200).json({ success: true, courses: courseData })
+  } catch (error: any) {
+    console.error(error)
+    return res.status(500).json({ success: false, message: "Server error" })
+  }
+}
