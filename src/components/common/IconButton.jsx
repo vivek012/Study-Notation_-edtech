@@ -12,7 +12,7 @@ const IconButton = ({
   return (
     <button
     type={type}
-    disabled={disabled}
+    disabled={disabled} 
     onClick={onclick}
     className={`flex items-center ${
           outline ? "border border-yellow-50 bg-transparent" : "bg-yellow-50"
@@ -23,7 +23,7 @@ const IconButton = ({
             <span className='0'>{text}</span>
             {children}
             </>
-        ): {text}}
+        ): text}
     </button>
   )
 }
