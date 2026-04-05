@@ -55,7 +55,7 @@ instructions:{
 },
 status:{
     type:String,
-    enum:["Draft", "Publisher"]
+    enum:["Draft", "Published"]
 }})
 
 const Course = mongoose.model('Course', courseSchema)

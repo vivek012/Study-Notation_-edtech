@@ -4,8 +4,9 @@ import CourseInformationForm from '../AddCourses/CourseInformation/CourseInforma
 
 
 import { FaCheck } from "react-icons/fa"
-import PublishCourse from './PublishCourse/PublishCourse'
+
 import CourseBuilderForm from './CourseBuilder/CourseBuilderForm'
+import PublishCourse from './PublishCourse'
 
 
 export default function RenderSteps() {

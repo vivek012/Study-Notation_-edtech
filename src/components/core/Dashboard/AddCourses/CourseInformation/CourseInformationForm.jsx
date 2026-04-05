@@ -291,7 +291,7 @@ const CourseInformationForm = () => {
       />
 
       {/* Next button  */}
-      <div className="">
+      <div className="flex justify-end gap-x-2">
         {
           editCourse && (
             <button

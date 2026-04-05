@@ -1,11 +1,7 @@
 import Section from "../models/Section";
 import Course from "../models/Course";
-import { Request,  Response } from "express"
-
-
-
-
-
+import SubSection from "../models/SubSection";
+import { Request, Response } from "express"
 
 // create Section
 export const createSection = async (req: Request, res: Response) => {
@@ -37,6 +33,7 @@ export const createSection = async (req: Request, res: Response) => {
                 path: "subSection"
             }
         })
+            .exec();
         // return response
         return res.status(200).json({
             success: true,
@@ -59,23 +56,26 @@ export const createSection = async (req: Request, res: Response) => {
 export const updateSection = async (req: Request, res: Response) => {
     try {
         //  data input
-        const { sectionName, sectionId } = req.body
-        // data validation
-        if (!sectionName || !sectionId) {
-            return res.status(400).json({
-                success: false,
-                message: "Missing Properties"
-            })
-        }
+        const { sectionName, sectionId, courseId } = req.body
+
         // update data 
-        const updateSection = await Section.findByIdAndUpdate(sectionId, {sectionName}, {new:true})
+        const updateSection = await Section.findByIdAndUpdate(sectionId, { sectionName }, { new: true })
         // return response 
 
-         return res.status(200).json({
+        const course = await Course.findById(courseId)
+            .populate({
+                path: "courseContent",
+                populate: {
+                    path: "subSection",
+                },
+            })
+            .exec();
+
+        res.status(200).json({
             success: true,
-            message: "Section Updated Successfully",
-            updateSection,
-        })
+            message: updateSection,
+            data: course,
+        });
 
     } catch (error: any) {
         return res.status(500).json({
@@ -90,25 +90,40 @@ export const updateSection = async (req: Request, res: Response) => {
 // delete section 
 export const deleteSection = async (req: Request, res: Response) => {
     try {
-        //  get id - assuming that we are sending ID in params
-        const {  sectionId } = req.params
-        // data validation
-        if (!sectionId) {
-            return res.status(400).json({
+        const { sectionId, courseId } = req.body;
+        await Course.findByIdAndUpdate(courseId, {
+            $pull: {
+                courseContent: sectionId,
+            }
+        })
+        const section = await Section.findById(sectionId);
+        console.log(sectionId, courseId);
+        if (!section) {
+            return res.status(404).json({
                 success: false,
-                message: "Missing Properties"
+                message: "Section not Found",
             })
         }
-        // delete data 
 
-        const deleteSection = await Section.findByIdAndUpdate(sectionId)
-        // return response 
+        //delete sub section
+        await SubSection.deleteMany({ _id: { $in: section.subSection } });
 
-         return res.status(200).json({
-            success: true,
-            message: "Section Deleted Successfully",
-           
+        await Section.findByIdAndDelete(sectionId);
+
+        //find the updated course and return 
+        const course = await Course.findById(courseId).populate({
+            path: "courseContent",
+            populate: {
+                path: "subSection"
+            }
         })
+            .exec();
+
+        res.status(200).json({
+            success: true,
+            message: "Section deleted",
+            data: course
+        });
 
     } catch (error: any) {
         return res.status(500).json({

@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import { IoAddCircleOutline } from "react-icons/io5"
 import { setCourse, setEditCourse, setStep } from '../../../../../slices/courseSlice'
 import { createSection, updateSection } from '../../../../../services/operations/courseDetailsAPI'
+import { MdNavigateNext } from "react-icons/md"
 
 
 const CourseBuilderForm = () => {
@@ -70,6 +71,7 @@ const CourseBuilderForm = () => {
     }
     if (course.courseContent.some((section) => section.subSection.length === 0)) {
       toast.error("Please add atleast one Lecture in each Section")
+      return;
     }
 
     dispatch(setStep(3))
@@ -141,8 +143,11 @@ const CourseBuilderForm = () => {
         <IconButton
           disabled={loading}
           text={'Next'}
-          onClick={goToNext}
-        />
+          onclick={goToNext}
+        >
+
+        <MdNavigateNext/>
+        </IconButton>
       </div>
 
     </div>
