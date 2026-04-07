@@ -8,82 +8,87 @@ import mongoose from "mongoose";
 import crypto from "crypto";
 
 
-// Capture  the payment and initiate the Razorpy Order
 
-export const capturePayment = async (req: Request, res: Response) => {
-
-    try {
-        //  get courseId and userid
-        const { courseId } = req.body;
-        const userId = req.user.id;
-
-        // valid courseId
-        if (!courseId) {
-            return res.status(400).json({
-                success: false,
-                message: "Please Provide valid course Id"
-            })
-        }
-        // valid courseDetails
-        const courseDetails = await Course.findById(courseId)
-        if (!courseDetails) {
-            return res.status(400).json({
-                success: false,
-                message: "Course Details are not Valid"
-            })
-        }
-        // user already enrolled or not 
-        const uid = new mongoose.Types.ObjectId(userId);
-
-        if (courseDetails.studentsEnrolled.includes(uid)) {
-            return res.status(400).json({
-                success: false,
-                message: "User already enrolled in this course"
-            })
-        }
-        // create order on Razorpay
-        const amount = courseDetails.price
-        if (!amount) {
-            return res.status(400).json({
-                success: false,
-                message: "Course price is not valid"
-            })
-        }
-        const currency = "INR";
-
-        const options = {
-            amount: amount * 100,
-            currency,
-            receipt: (Math.random().toString() + Date.now().toString()),
-            notes: {
-                courseID: courseId,
-                userId,
-            }
-        }
-
-        const paymentResponse = await instance.orders.create(options);
-        console.log(paymentResponse)
-        // return response to frontend
-        return res.status(200).json({
-            success: true,
-            courseName: courseDetails.courseName,
-            courseDescription: courseDetails.courseDescription,
-            paymentResponse,
-            orderId: paymentResponse.id,
-            currency: paymentResponse.currency,
-            amount: paymentResponse.amount,
-            message: "payment Capture Successfully,Now you can enroll the course"
-        })
-
-    } catch (error: any) {
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error, Please try After Some time again",
-            error: error.message,
-        });
-    }
+export const capturePayment = async (req: Request, res: Response)=>{
 
 }
+
+// Capture  the payment and initiate the Razorpy Order
+
+// export const capturePayment = async (req: Request, res: Response) => {
+
+//     try {
+//         //  get courseId and userid
+//         const { courseId } = req.body;
+//         const userId = req.user.id;
+
+//         // valid courseId
+//         if (!courseId) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Please Provide valid course Id"
+//             })
+//         }
+//         // valid courseDetails
+//         const courseDetails = await Course.findById(courseId)
+//         if (!courseDetails) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Course Details are not Valid"
+//             })
+//         }
+//         // user already enrolled or not 
+//         const uid = new mongoose.Types.ObjectId(userId);
+
+//         if (courseDetails.studentsEnrolled.includes(uid)) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "User already enrolled in this course"
+//             })
+//         }
+//         // create order on Razorpay
+//         const amount = courseDetails.price
+//         if (!amount) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Course price is not valid"
+//             })
+//         }
+//         const currency = "INR";
+
+//         const options = {
+//             amount: amount * 100,
+//             currency,
+//             receipt: (Math.random().toString() + Date.now().toString()),
+//             notes: {
+//                 courseID: courseId,
+//                 userId,
+//             }
+//         }
+
+//         const paymentResponse = await instance.orders.create(options);
+//         console.log(paymentResponse)
+//         // return response to frontend
+//         return res.status(200).json({
+//             success: true,
+//             courseName: courseDetails.courseName,
+//             courseDescription: courseDetails.courseDescription,
+//             paymentResponse,
+//             orderId: paymentResponse.id,
+//             currency: paymentResponse.currency,
+//             amount: paymentResponse.amount,
+//             message: "payment Capture Successfully,Now you can enroll the course"
+//         })
+
+//     } catch (error: any) {
+//         return res.status(500).json({
+//             success: false,
+//             message: "Internal Server Error, Please try After Some time again",
+//             error: error.message,
+//         });
+//     }
+
+// }
 
 export const verifySignature = async (req: Request, res: Response) => {
 

@@ -36,7 +36,7 @@ courseRouter.delete("/deleteCourse", deleteCourse)
 
 courseRouter.post("/createCategory", createCategory)
 courseRouter.get("/showAllCategories", showAllCategory )
-courseRouter.get("/getCategoryPageDetails", categoryPageDetails)
+courseRouter.post("/getCategoryPageDetails", categoryPageDetails)
 
 
 
