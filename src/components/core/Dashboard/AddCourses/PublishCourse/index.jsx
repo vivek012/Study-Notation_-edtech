@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '../../../../common/IconButton';
 import { resetCourseState, setStep } from '../../../../../slices/courseSlice';
-import { COURSE_STATUS } from '../../../../../../utils/constants';
+import { COURSE_STATUS } from '../../../../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import { editCourseDetails } from '../../../../../services/operations/courseDetailsAPI';
 

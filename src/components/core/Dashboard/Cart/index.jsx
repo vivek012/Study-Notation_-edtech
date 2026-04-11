@@ -4,7 +4,7 @@ import RenderCartCourses from './RenderCartCourses'
 import RenderTotalAmount from './RenderTotalAmount'
 
 const Cart = () => {
-  const { total, totalItems } = useSelector((state) => state.auth)
+  const { total, totalItems } = useSelector((state) => state.cart)
 
 
   return (
@@ -12,8 +12,7 @@ const Cart = () => {
       <h1 className="mb-14 text-3xl font-medium text-richblack-5">Your Cart</h1>
       <p className="border-b border-b-richblack-400 pb-2 font-semibold text-richblack-400">{totalItems || 0} Course in Cart</p>
       {
-        total > 0
-          ? (
+        total > 0 ? (
             <div className="mt-8 flex flex-col-reverse items-start gap-x-10 gap-y-6 lg:flex-row">
               <RenderCartCourses />
               <RenderTotalAmount />

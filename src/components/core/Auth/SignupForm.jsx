@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { ACCOUNT_TYPE } from '../../../../utils/constants';
+import { ACCOUNT_TYPE } from '../../../utils/constants';
 import Tab from '../../common/Tab';
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import toast, { Toaster } from 'react-hot-toast';

@@ -7,6 +7,8 @@ import { Autoplay, FreeMode, Navigation, Pagination } from 'swiper/modules' // â
 import CourseCard from './CourseCard'
 
 const CourseSlider = ({ courses }) => {
+
+  console.log({courses})
   return (
     <>
       {courses?.length ? (

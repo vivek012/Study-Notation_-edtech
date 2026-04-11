@@ -46,7 +46,7 @@ const EnrolledCourses = () => {
 
             {/* courses Name */}
             {
-              enrolledCourses.map((course, i, arr) => {
+              enrolledCourses.map((course, i, arr) => (
                 <div className={`flex items-center border border-richblack-700 ${
                 i === arr.length - 1 ? "rounded-b-lg" : "rounded-none"
               }`}
@@ -72,7 +72,7 @@ const EnrolledCourses = () => {
 
                   </div>
                 </div>
-              })
+              ))
             }
 
           </div>

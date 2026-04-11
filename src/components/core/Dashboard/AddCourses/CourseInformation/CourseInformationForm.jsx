@@ -13,7 +13,7 @@ import RequirementField from './RequirementField';
 import IconButton from '../../../../common/IconButton';
 import { setCourse, setStep } from '../../../../../slices/courseSlice';
 import toast from 'react-hot-toast';
-import { COURSE_STATUS } from '../../../../../../utils/constants';
+import { COURSE_STATUS } from '../../../../../utils/constants';
 
 
 

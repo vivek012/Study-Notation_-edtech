@@ -175,6 +175,7 @@ export const getEnrolledCourses = async (req: Request, res: Response) => {
   try {
     const userId = req.user.id
 
+
     const userDetails = await User.findById(userId)
       .populate({
         path: "courses",
@@ -185,18 +186,22 @@ export const getEnrolledCourses = async (req: Request, res: Response) => {
       })
       .exec()
 
+
     if (!userDetails) {
       return res.status(404).json({ success: false, message: `User not found: ${userId}` })
     }
 
     const user = userDetails.toObject() as any
 
-    if (!user.coursesEnrolled?.length) {
+
+    if (!user.courses?.length) {
       return res.status(200).json({ success: true, data: [] })
     }
+ 
 
     const enrichedCourses = await Promise.all(
-      user.coursesEnrolled.map(async (course: any) => {
+   
+      user.courses.map(async (course: any) => {
         const totalDurationInSeconds = course.courseContent.reduce(
           (total: number, section: any) =>
             total +
@@ -216,8 +221,9 @@ export const getEnrolledCourses = async (req: Request, res: Response) => {
           courseID: course._id,
           userId,
         })
+  
 
-        const completedCount = courseProgress?.completedVideos.length ?? 0
+        const completedCount = courseProgress?.completedVideos?.length ?? 0
         const progressPercentage =
           subsectionCount === 0
             ? 100

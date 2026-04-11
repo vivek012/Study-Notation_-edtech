@@ -8,7 +8,7 @@ import { courseEndpoints } from "../api"
 // import { updateCompletedLectures } from "../../slices/viewCourseSlice"
 
 const {
-  COURSE_DETAILS_API,
+  COURSE_DETAILS_API,    
   COURSE_CATEGORIES_API,
   GET_ALL_COURSE_API,
   CREATE_COURSE_API,

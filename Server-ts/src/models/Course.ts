@@ -33,7 +33,7 @@ const courseSchema = new mongoose.Schema({
     thumbnail: {
         type: String
     },
-    tag:{
+    tag: {
         type: [String],
         required: true,
     },
@@ -42,21 +42,26 @@ const courseSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category"
     },
-    studentsEnrolled:[
-         {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User",
-    }
-],
-instructions:{
-    type:[String],
+    studentsEnrolled: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "User",
+        }
+    ],
+    instructions: {
+        type: [String],
 
-},
-status:{
-    type:String,
-    enum:["Draft", "Published"]
-}})
+    },
+    status: {
+        type: String,
+        enum: ["Draft", "Published"]
+    }, 
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+})
 
 const Course = mongoose.model('Course', courseSchema)
 

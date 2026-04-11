@@ -1,6 +1,4 @@
 import React from 'react'
-
-
 import { catalogData } from '../api';
 import { apiConnector } from '../apiconnector';
 import toast from 'react-hot-toast';

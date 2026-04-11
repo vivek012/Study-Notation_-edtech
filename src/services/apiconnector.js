@@ -10,4 +10,4 @@ export const  apiConnector =(method, url, bodyData, headers, params) =>{
         headers : headers || null,
         params: params || null
     })
-}
+} 
