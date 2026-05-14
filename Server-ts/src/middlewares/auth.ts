@@ -26,16 +26,15 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
                 message: "Unauthorized Access",
             })
          }
-         console.log(token)
-         console.log(process.env.JWT_SECRET)
+        
 
          try {
              //   verify token
-             console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+            //  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
              const decode =  jwt.decode(token); 
-             console.log({decode});
+            //  console.log({decode});
              req.user = decode ;
-             console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
+            //  console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
 
             // console.log(decode)  
             

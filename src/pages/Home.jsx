@@ -123,7 +123,7 @@ const Home = () => {
 
 
             {/* SECTION 2 */}
-            <div className="bg-pure-greys-5 text-richblack-700 pb-16">
+            <div className="bg-pure-greys-5 text-richblack-700 pb-16 mb-4">
                 <div className="homepage_bg  h-96 w-full">
                     <div className="w-11/12 max-w-maxContent flex flex-col items-center justify-center gap-5 mx-auto">
                         <div className="h-52"></div>
@@ -166,11 +166,12 @@ const Home = () => {
 
 
             {/* SECTION 3 */}
-            <div className="w-11/12 mx-auto max-w-maxContent flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white">
+            <div className="w-11/12 mt-6 mx-auto max-w-maxContent flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white">
+            
 
                         <InstructorSection/>
 
-                        <h2 className="text-center text-4xl font-semibold mt-10"> Review from Other Learners </h2>
+                        {/* <h2 className="text-center text-4xl font-semibold mt-10"> Review from Other Learners </h2> */}
 
             </div>
 

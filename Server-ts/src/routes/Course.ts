@@ -5,6 +5,7 @@ import { createSection, deleteSection, updateSection } from "../controllers/Sect
 import { createSubSection, deleteSubSection, updateSubSection } from "../controllers/subSection";
 import { averageRating, createRatingAndReview, getAllRating } from "../controllers/RatingAndReview";
 import { categoryPageDetails, createCategory, showAllCategory } from "../controllers/Category";
+import { updateCourseProgress } from "../controllers/courseProgress";
 
 
 const courseRouter = Router();
@@ -28,7 +29,7 @@ courseRouter.get("/getInstructorCourses", auth, isInstructor, getInstructorCours
 // Delete a Course
 courseRouter.delete("/deleteCourse", deleteCourse)
 
-// courseRouter.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
+courseRouter.post("/updateCourseProgress", auth, isStudent, updateCourseProgress);
 
 // category Routes
 

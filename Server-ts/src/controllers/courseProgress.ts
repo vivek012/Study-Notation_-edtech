@@ -4,7 +4,7 @@ import CourseProgress from "../models/CourseProgress"
 import { Request, Response } from "express"
 
 
-exports.updateCourseProgress = async (req: Request, res: Response) => {
+ export const updateCourseProgress = async (req: Request, res: Response) => {
   const { courseId, subsectionId } = req.body
   const userId = req.user.id
 

@@ -23,6 +23,11 @@ import Catalog from "./pages/Catalog"
 import CourseDetails from "./pages/CourseDetails"
 import { ACCOUNT_TYPE } from "./utils/constants"
 import ViewCourse from "./pages/ViewCourse"
+import VideoDetails from "./components/core/ViewCourse/VideoDetails"
+import Instructor from "./components/core/Dashboard/InstructorDashboard/Instructor"
+import Settings from "./components/core/Dashboard/Settings"
+
+
 
 
 
@@ -74,7 +79,7 @@ function App() {
         >
 
           <Route path="dashboard/my-profile" element={<MyProfile />} />
-          <Route path="dashboard/settings" element={<MyProfile />} />
+          <Route path="dashboard/settings" element={<Settings />} />
           {
             user?.accountType === ACCOUNT_TYPE.STUDENT && (
               <>
@@ -88,6 +93,7 @@ function App() {
             user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
               <>
 
+                <Route path="dashboard/instructor" element={<Instructor />} />
                 <Route path="dashboard/add-course" element={<AddCourse />} />
                 <Route path="dashboard/my-courses" element={<MyCourses />} />
                 <Route path="dashboard/edit-course/:courseId" element={<EditCourse />} />

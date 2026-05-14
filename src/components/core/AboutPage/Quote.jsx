@@ -3,7 +3,7 @@ import HighlightText from '../HomePage/HighlightText'
 
 const Quote = () => {
   return (
-    <div>
+    <div className='text-xl md:text-4xl font-semibold mx-auto py-5 pb-20 text-center text-white'>
         We  are Passinate about revolutionzing the way we learn. Our innovative platform 
         <HighlightText text={"combines technology"}/>
         <span className='bg-linear-to-b from-[#FF512F] to-[#F09819] text-transparent bg-clip-text font-bold'>
