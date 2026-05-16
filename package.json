@@ -7,7 +7,7 @@
     "dev": "concurrently -n \"client,server\" -c \"bgBlue,bgYellow\" \"npm run client\" \"npm run server\"",
     "client": "vite",
     "server": "npm run dev --prefix Server-ts",
-    "build": "vite build",
+    "build": "npm install --legacy-peer-deps && vite build",
     "preview": "vite preview",
     "lint": "eslint ."
   },
